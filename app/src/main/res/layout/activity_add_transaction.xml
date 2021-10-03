@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".AddTransactionFragment">
+    tools:context=".AddTransactionActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content">
 
         <include
-            android:id="@+id/add_expense_layout"
+            android:id="@+id/add_transaction_layout"
             layout="@layout/content_add_transaction_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +31,7 @@
             android:text="@string/button_text_save_transaction"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/add_expense_layout" />
+            app:layout_constraintTop_toBottomOf="@id/add_transaction_layout" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
