@@ -1,11 +1,14 @@
 package com.example.expensetracker.onboarding
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.expensetracker.MainActivity
 import com.example.expensetracker.databinding.FragmentViewPagerBinding
 import com.example.expensetracker.onboarding.screens.FirstScreen
 import com.example.expensetracker.onboarding.screens.SecondScreen
@@ -17,7 +20,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 class ViewPagerFragment : Fragment() {
 
     private lateinit var binding: FragmentViewPagerBinding
-
+    var sharedPreferences: SharedPreferences? = null
     private var position = 0
 
     override fun onCreateView(
@@ -25,6 +28,10 @@ class ViewPagerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
+        if (restorePrefData()) {
+            startMainActivity()
+        }
+
         binding = FragmentViewPagerBinding.inflate(layoutInflater, container, false)
 
         val fragmentList = arrayListOf(
@@ -68,9 +75,27 @@ class ViewPagerFragment : Fragment() {
             binding.viewPager.currentItem = position
         }
         if (position == fragmentList.size) {
-            Toast.makeText(activity, "End of the onboarding service", Toast.LENGTH_SHORT).show()
+            savePrefData()
+            startMainActivity()
         }
     }
 
+    private fun startMainActivity() {
+        val i = Intent(activity, MainActivity::class.java)
+        startActivity(i)
+    }
+
+    private fun savePrefData() {
+        sharedPreferences =
+            requireActivity().applicationContext.getSharedPreferences("pref", Context.MODE_PRIVATE)
+        val editor = sharedPreferences!!.edit()
+        editor.putBoolean("onBoardingActivityFinished", true)
+        editor.apply()
+    }
+
+    private fun restorePrefData(): Boolean {
+        sharedPreferences = requireActivity().getSharedPreferences("pref", Context.MODE_PRIVATE)
+        return sharedPreferences!!.getBoolean("onBoardingActivityFinished", false)
+    }
 
 }

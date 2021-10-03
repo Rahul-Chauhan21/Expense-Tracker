@@ -74,11 +74,12 @@
 
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/transaction_rv"
+                android:id="@+id/rv_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_16"
                 android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_recent_transaction"
