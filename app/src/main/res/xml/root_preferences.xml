@@ -1,0 +1,36 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="General">
+
+        <ListPreference
+            android:icon="@drawable/ic_night"
+            app:defaultValue="Default"
+            app:entries="@array/ui_modes_entries"
+            app:entryValues="@array/ui_modes_values"
+            app:key="theme"
+            app:title="Change Theme"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            android:icon="@drawable/ic_savings"
+            app:defaultValue="IND Rupee"
+            app:entries="@array/currency_entries"
+            app:entryValues="@array/currency_values"
+            app:key="currency"
+            app:title="Change Currency"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="About">
+
+        <Preference
+            android:icon="@drawable/ic_feedback"
+            app:key="feedback"
+            app:title="Send feedback"
+            app:summary="Report technical issues or suggest new features"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

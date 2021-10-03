@@ -1,0 +1,22 @@
+<resources>
+    <string-array name="ui_modes_entries">
+        <item>System Default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+
+    <string-array name="ui_modes_values">
+        <item>Default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+
+    <string-array name="currency_entries">
+
+    </string-array>
+
+
+    <string-array name="currency_values">
+
+    </string-array>
+</resources>
