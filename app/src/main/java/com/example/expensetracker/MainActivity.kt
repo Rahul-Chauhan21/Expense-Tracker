@@ -26,6 +26,9 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
     }
 
+    fun setBottomNavigationVisibility(visibility: Int) {
+        binding.bottomNavMain.visibility = visibility
+    }
 
 
 }

@@ -1,23 +1,23 @@
 package com.example.expensetracker
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.expensetracker.adapter.TransactionAdapter
 import com.example.expensetracker.databinding.FragmentTransactionsBinding
+import com.example.expensetracker.utils.formatAmount
 import com.example.expensetracker.viewmodel.TransactionViewModel
-import java.text.NumberFormat
-import java.util.*
 
 
-class TransactionsDashboardFragment : Fragment() {
+class TransactionsDashboardFragment : BaseFragment() {
 
     private lateinit var binding: FragmentTransactionsBinding
-    private lateinit var viewModel: TransactionViewModel
+    private val sharedViewModel: TransactionViewModel by activityViewModels()
+    private lateinit var adapter: TransactionAdapter
+    override var bottomNavigationViewVisibility = View.VISIBLE
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,67 +25,101 @@ class TransactionsDashboardFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentTransactionsBinding.inflate(layoutInflater, container, false)
+        setupRv()
+        observeTransactions()
 
-        val adapter = TransactionAdapter(requireActivity().applicationContext)
-        binding.rvTransactionList.adapter = adapter
+        adapter.setOnItemClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("transaction", it)
+            }
 
-        viewModel = ViewModelProvider(
-            this,
-            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
-        ).get(TransactionViewModel::class.java)
+            findNavController().navigate(
+                R.id.action_transactionsFragment_to_transactionDetailsFragment,
+                bundle
+            )
+        }
 
-        viewModel.allTransactions.observe(viewLifecycleOwner, { list ->
+        binding.fabAddTransaction.setOnClickListener { findNavController().navigate(R.id.action_transactionsFragment_to_addTransactionFragment) }
+        observeChangeType()
+        return binding.root
+    }
+
+    private fun observeChangeType() {
+        binding.expenseCardView.totalCardView.setOnClickListener {
+            sharedViewModel.getTransactionOfType("Expense").observe(viewLifecycleOwner, {
+                adapter.updateList(it)
+            })
+        }
+        binding.incomeCardView.totalCardView.setOnClickListener {
+            sharedViewModel.getTransactionOfType("Income").observe(viewLifecycleOwner, {
+                adapter.updateList(it)
+            })
+        }
+        binding.totalBalanceView.totalBalanceCard.setOnClickListener {
+            sharedViewModel.allTransactions.observe(viewLifecycleOwner, { list ->
+                list?.let {
+                    adapter.updateList(it)
+                }
+            })
+        }
+    }
+
+    private fun observeTransactions() = with(sharedViewModel) {
+        sharedViewModel.allTransactions.observe(viewLifecycleOwner, { list ->
             list?.let {
                 adapter.updateList(it)
             }
         })
 
-        viewModel.totalIncome.observe(viewLifecycleOwner, { income ->
+        sharedViewModel.totalIncome.observe(viewLifecycleOwner, { income ->
             if (income != null) displayAmount(amount = income, "income") else displayAmount(
                 0.0,
                 "income"
             )
         })
 
-        viewModel.totalExpense.observe(viewLifecycleOwner, { expense ->
+        sharedViewModel.totalExpense.observe(viewLifecycleOwner, { expense ->
             if (expense != null) displayAmount(amount = expense, "expense") else displayAmount(
                 0.0,
                 "expense"
             )
         })
-        binding.fabAddTransaction.setOnClickListener { startAddTransactionActivity() }
-        return binding.root
+        sharedViewModel.totalBalance.observe(viewLifecycleOwner, { balance ->
+            if (balance != null) displayAmount(
+                amount = balance,
+                type = "balance"
+            ) else displayAmount(0.0, type = "balance")
+        })
     }
 
 
-    private fun displayAmount(amount: Double, type: String) {
+    private fun setupRv() = with(binding) {
+        adapter = TransactionAdapter(requireActivity().applicationContext)
+        rvTransactionList.adapter = adapter
+    }
+
+
+    private fun displayAmount(amount: Double, type: String) = with(binding) {
         val formattedTotalAmount = formatAmount(amount)
-        var balance = binding.totalBalanceView.totalBalance.text.toString().toDoubleOrNull()
-        if (balance == null) balance = 0.0
+        when (type) {
+            "income" -> {
 
-        if (type == "income") {
-            binding.incomeCardView.tvTotalAmount.text =
-                getString(R.string.income, formattedTotalAmount)
-            balance += amount
+                incomeCardView.tvTotalAmount.text =
+                    getString(R.string.income, formattedTotalAmount)
 
-        } else {
-            binding.expenseCardView.tvTotalAmount.text =
-                getString(R.string.expense, formattedTotalAmount)
-            balance -= amount
+            }
+
+            "expense" -> {
+                expenseCardView.tvTotalAmount.text =
+                    getString(R.string.expense, formattedTotalAmount)
+            }
+            else -> {
+
+                totalBalanceView.tvTotalBalance.text =
+                    getString(R.string.balance, formattedTotalAmount)
+
+
+            }
         }
-
-        binding.totalBalanceView.totalBalance.text =
-            getString(R.string.balance, formatAmount(balance))
-
     }
-
-    private fun formatAmount(amount: Double) =
-        NumberFormat.getCurrencyInstance(Locale.getDefault()).format(amount)
-
-    private fun startAddTransactionActivity() {
-        val i = Intent(requireActivity(), AddTransactionActivity::class.java)
-        startActivity(i)
-    }
-
-
 }

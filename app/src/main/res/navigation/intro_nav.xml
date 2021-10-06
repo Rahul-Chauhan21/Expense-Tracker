@@ -18,6 +18,7 @@
         <action
             android:id="@+id/action_splashFragment_to_mainActivity"
             app:destination="@id/mainActivity"
+            app:enterAnim="@anim/nav_default_enter_anim"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
     </fragment>

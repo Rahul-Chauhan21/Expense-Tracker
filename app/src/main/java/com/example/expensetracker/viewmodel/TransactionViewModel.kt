@@ -16,6 +16,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     val allTransactions: LiveData<List<Transaction>>
     val totalExpense: LiveData<Double>
     val totalIncome: LiveData<Double>
+    val totalBalance : LiveData<Double>
 
     init {
         val dao = TransactionDatabase.getDatabase(application).getTransactionDao()
@@ -23,19 +24,21 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         allTransactions = repository.allTransaction
         totalExpense = repository.totalExpense
         totalIncome = repository.totalIncome
+        totalBalance = repository.totalBalance
     }
 
-    /*fun fetchData(): ArrayList<Expense> {
-       val list = ArrayList<Expense>()
-       for(i in 0 until 10) {
-           val dummy = Expense("Abc", "01/11/1999", i.toDouble(), "Food")
-           list.add(dummy)
-       }
-       return list
-   }*/
 
-    fun deleteExpense(transaction: Transaction) = viewModelScope.launch(Dispatchers.IO) {
+    fun updateTransaction(transaction: Transaction) = viewModelScope.launch(Dispatchers.IO) {
+        repository.update(transaction)
+    }
+
+    fun deleteTransaction(transaction: Transaction) = viewModelScope.launch(Dispatchers.IO) {
         repository.delete(transaction)
     }
+
+    fun getTransactionById(id: Int) = repository.getDetailsById(id)
+
+    fun getTransactionOfType(type : String) = repository.getAllSingleTransaction(type)
+
 
 }

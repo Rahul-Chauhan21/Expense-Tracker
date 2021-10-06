@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.expensetracker.R
 import com.example.expensetracker.databinding.ItemTransactionLayoutBinding
 import com.example.expensetracker.model.Transaction
-import java.text.NumberFormat
-import java.util.*
-import kotlin.collections.ArrayList
+import com.example.expensetracker.utils.formatAmount
 
 class TransactionAdapter(private val context: Context) :
     RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
@@ -17,7 +15,7 @@ class TransactionAdapter(private val context: Context) :
     private val allTransactions = ArrayList<Transaction>()
 
     inner class TransactionViewHolder(val binding: ItemTransactionLayoutBinding) :
-        RecyclerView.ViewHolder(binding.root) {}
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
         val binding =
@@ -29,7 +27,6 @@ class TransactionAdapter(private val context: Context) :
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         with(holder) {
             with(allTransactions[position]) {
-                binding.ivTransaction.setImageResource(R.drawable.ic_others)
                 binding.tvTitle.text = this.title
                 binding.tvCategory.text = this.category
                 if (this.transactionType == "Income") {
@@ -43,6 +40,45 @@ class TransactionAdapter(private val context: Context) :
                 }
 
                 binding.tvDate.text = this.date
+                when (binding.tvCategory.text) {
+                    "Housing" -> {
+                        binding.ivTransaction.setImageResource(R.drawable.ic_housing)
+                    }
+                    "Transportation" -> {
+                        binding.ivTransaction.setImageResource(R.drawable.ic_transport)
+                    }
+                    "Food" -> {
+                        binding.ivTransaction.setImageResource(R.drawable.ic_food)
+                    }
+                    "Utilities" -> {
+                        binding.ivTransaction.setImageResource(R.drawable.ic_utilities)
+                    }
+                    "Insurance" -> {
+                        binding.ivTransaction.setImageResource(R.drawable.ic_insurance)
+                    }
+                    "Healthcare" -> {
+                        binding.ivTransaction.setImageResource(R.drawable.ic_medical)
+                    }
+                    "Saving & Debts" -> {
+                        binding.ivTransaction.setImageResource(R.drawable.ic_savings)
+                    }
+                    "Personal Spending" -> {
+                        binding.ivTransaction.setImageResource(R.drawable.ic_personal_spending)
+                    }
+                    "Entertainment" -> {
+                        binding.ivTransaction.setImageResource(R.drawable.ic_entertainment)
+                    }
+                    "Miscellaneous" -> {
+                        binding.ivTransaction.setImageResource(R.drawable.ic_others)
+                    }
+                    else -> {
+                        binding.ivTransaction.setImageResource(R.drawable.ic_others)
+                    }
+                }
+
+                holder.itemView.setOnClickListener {
+                    onItemClickListener?.let { it(this) }
+                }
             }
         }
     }
@@ -56,6 +92,10 @@ class TransactionAdapter(private val context: Context) :
         notifyDataSetChanged()
     }
 
-    private fun formatAmount(amount: Double) =
-        NumberFormat.getCurrencyInstance(Locale.getDefault()).format(amount)
+
+    // on item click listener
+    private var onItemClickListener: ((Transaction) -> Unit)? = null
+    fun setOnItemClickListener(listener: (Transaction) -> Unit) {
+        onItemClickListener = listener
+    }
 }

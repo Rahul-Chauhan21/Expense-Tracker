@@ -1,12 +1,12 @@
 package com.example.expensetracker
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-class ChartsFragment : Fragment() {
+class ChartsFragment : BaseFragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
