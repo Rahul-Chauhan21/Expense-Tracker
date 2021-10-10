@@ -15,8 +15,10 @@
     <string name="input_hint_amount">Amount</string>
     <string name="input_hint_note">Note</string>
     <string name="button_text_save_transaction">Save Transaction</string>
+    <string name="button_add_reminder">Add Reminder</string>
     <string name="input_hint_title">Title</string>
     <string name="input_hint_date">Date</string>
+    <string name="input_hint_time">Time</string>
     <string name="input_hint_category">Category</string>
     <string name="text_title">Title</string>
     <string name="text_about">About</string>

@@ -56,6 +56,16 @@ class TransactionDetailsFragment : BaseFragment() {
                 R.id.action_transactionDetailsFragment_to_editTransactionFragment, bundle
             )
         }
+
+        binding.fabAddReminder.setOnClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("transaction", transaction)
+            }
+            findNavController().navigate(
+                R.id.action_transactionDetailsFragment_to_reminderFragment,
+                bundle
+            )
+        }
     }
 
     private fun getTransaction(id: Int) = sharedViewModel.getTransactionById(id)
